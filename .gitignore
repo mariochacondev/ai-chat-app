@@ -1,1 +1,8 @@
-.env
+backend/app.env.dev
+backend/app.env.local
+backend/app.env.prod
+frontend/src/.env.development
+frontend/src/.env.production
+frontend/src/.env
+notes.txt
+backend/requirements.txt
