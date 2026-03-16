@@ -1,8 +1,3 @@
-# Environment variables
-.env
-.env.*
-*.env
-
 # Logs
 logs
 *.log
@@ -12,21 +7,24 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-frontend/node_modules
-dist
-dist-ssr
+# Env files
+.env
+.env.*
+*.env
 *.local
+
+# Node
+node_modules/
 frontend/node_modules/
+dist/
+dist-ssr/
+
+# Python
 __pycache__/
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+# IDE
+.vscode/
+.idea/
 
+# OS
+.DS_Store
