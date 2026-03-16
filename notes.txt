@@ -1,4 +1,0 @@
-AI chat notes:
-- Ollama runs on 11434
-- Qdrant stores embeddings
-- JWT auth protects routes
