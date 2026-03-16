@@ -1,0 +1,6 @@
+from typing import Protocol, Optional
+from app.core.entities.user import User
+
+class UserRepository(Protocol):
+    async def get_by_email(self, email: str) -> Optional[User]: ...
+    async def create(self, email: str, hashed_password: str) -> User: ...
