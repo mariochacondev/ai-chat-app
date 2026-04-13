@@ -2,6 +2,7 @@ import {type FormEvent, useEffect, useRef, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {getOrCreateWs} from "../api/wsManager.ts";
 import {getAccessToken, logout} from "../api/auth";
+import {getCurrentUser} from "../api/me";
 import client from "../api/client";
 
 
@@ -21,6 +22,7 @@ export default function ChatPage() {
     const [messages, setMessages] = useState<Msg[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [isAdmin, setIsAdmin] = useState(false);
 
     // conversations
     const [conversations, setConversations] = useState<ConversationItem[]>([]);
@@ -31,6 +33,10 @@ export default function ChatPage() {
     const assistantIndexRef = useRef<number | null>(null);
     const activeRequestIdRef = useRef<string | null>(null);
     const conversationIdRef = useRef<number | null>(null);
+
+    getCurrentUser().then((data) => {
+        setIsAdmin(data.is_admin)
+    })
 
     function newRequestId() {
         return crypto.randomUUID();
@@ -238,6 +244,14 @@ export default function ChatPage() {
     function uploadDoc() {
         navigate("/docs", {replace: true});
     }
+;
+
+    function adminPage() {
+        if (isAdmin){
+            navigate("/admin/users", {replace: true})
+        }
+
+    }
 
     async function onSelectConversation(id: number) {
         if (loading) return; // keep it simple: don’t switch mid-stream
@@ -300,6 +314,9 @@ export default function ChatPage() {
                     </button>
                     <button onClick={onLogout} style={{flex: 1}}>
                         Logout
+                    </button>
+                    <button onClick={adminPage} style={{flex: 1}}>
+                        Admin
                     </button>
                 </div>
             </div>

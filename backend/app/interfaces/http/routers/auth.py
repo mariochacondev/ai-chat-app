@@ -1,8 +1,12 @@
-from fastapi import APIRouter, HTTPException
-from app.infrastructure.repositories.sqlalchemy_user_repo import SQLAlchemyUserRepository
+from fastapi import APIRouter, Depends, HTTPException, status
 from app.infrastructure.security.passlib_hasher import PasslibHasher
 from app.infrastructure.security.jwt_tokens import JWTService
 from app.interfaces.http.schemas.auth import RegisterIn, TokenOut, RefreshIn
+from app.deps import get_user_id_from_token
+from app.infrastructure.repositories.sqlalchemy_user_repo import SQLAlchemyUserRepository
+from app.infrastructure.db import SessionLocal
+from app.infrastructure.models import UserModel
+from sqlalchemy import select
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -50,3 +54,24 @@ async def refresh(payload: RefreshIn):
 
     new_access = tokens.create_access_token(sub=sub)
     return TokenOut(access_token=new_access, refresh_token=payload.refresh_token, token_type="bearer")
+
+
+@router.get("/me")
+async def me(user_id: int = Depends(get_user_id_from_token)):
+    async with SessionLocal() as s:
+        res = await s.execute(select(UserModel).where(UserModel.id == user_id))
+        user = res.scalar_one_or_none()
+
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User not found",
+            )
+
+        return {
+            "id": user.id,
+            "email": user.email,
+            "is_active": user.is_active,
+            "is_admin": user.is_admin,
+            "created_at": user.created_at,
+        }

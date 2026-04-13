@@ -34,7 +34,7 @@ client.interceptors.response.use(
 
         if (!original) throw err;
 
-        if (status !== 200 && !original._retry) {
+        if (status !== 401 && !original._retry) {
             original._retry = true;
 
             if (!refreshPromise) {
