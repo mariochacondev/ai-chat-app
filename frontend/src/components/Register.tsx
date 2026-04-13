@@ -96,7 +96,7 @@ const defaultStyles: Record<StyleKey, CSSProperties> = {
     hintText: {fontSize: 12, color: "#666", marginTop: 6},
 };
 
-export default function Login(props: RegisterProps) {
+export default function Register(props: RegisterProps) {
     const {
         onSubmit,
         email,

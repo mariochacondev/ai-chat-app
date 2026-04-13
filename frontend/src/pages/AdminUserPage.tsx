@@ -11,6 +11,7 @@ export default function AdminUsersPage() {
     const [form, setForm] = useState({
         email: "",
         password: "",
+        confirm_password: "",
         is_admin: false,
     });
 
@@ -33,25 +34,30 @@ export default function AdminUsersPage() {
 
     async function handleCreate(e: React.FormEvent) {
         e.preventDefault();
+        if (form.password === form.confirm_password) {
+            try {
+                setSubmitting(true);
+                setError("");
 
-        try {
-            setSubmitting(true);
-            setError("");
+                await createUser(form);
 
-            await createUser(form);
+                setForm({
+                    email: "",
+                    password: "",
+                    confirm_password: "",
+                    is_admin: false,
+                });
 
-            setForm({
-                email: "",
-                password: "",
-                is_admin: false,
-            });
-
-            await loadUsers();
-        } catch (err: any) {
-            setError(err?.response?.data?.detail || "Failed to create user");
-        } finally {
-            setSubmitting(false);
+                await loadUsers();
+            } catch (err: any) {
+                setError(err?.response?.data?.detail || "Failed to create user");
+            } finally {
+                setSubmitting(false);
+            }
+        } else {
+            setError('Error with password verification')
         }
+
     }
 
     async function handleDelete(userId: number) {
@@ -74,11 +80,12 @@ export default function AdminUsersPage() {
     return (
         <div style={{padding: 24, maxWidth: 1100, margin: "0 auto"}}>
             <button style={{
-                        padding: "10px 14px",
-                        borderRadius: 8,
-                        border: "none",
-                        cursor: "pointer",
-                    }} onClick={chatPage}>Chat Page</button>
+                padding: "10px 14px",
+                borderRadius: 8,
+                border: "none",
+                cursor: "pointer",
+            }} onClick={chatPage}>Chat Page
+            </button>
             <h1>User Management</h1>
             <p>Create, view, and delete users.</p>
 
@@ -123,6 +130,14 @@ export default function AdminUsersPage() {
                     placeholder="Password"
                     value={form.password}
                     onChange={(e) => setForm((prev) => ({...prev, password: e.target.value}))}
+                    required
+                    style={{padding: 10, borderRadius: 8, border: "1px solid #ccc"}}
+                />
+                <input
+                    type="password"
+                    placeholder="Confirm password"
+                    value={form.confirm_password}
+                    onChange={(e) => setForm((prev) => ({...prev, confirm_password: e.target.value}))}
                     required
                     style={{padding: 10, borderRadius: 8, border: "1px solid #ccc"}}
                 />
