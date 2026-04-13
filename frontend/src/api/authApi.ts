@@ -1,15 +1,12 @@
-import { getRefreshToken, clearTokens } from "./auth";
 import client from "../api/client";
-
-
-const API_BASE = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api";
+import { getRefreshToken, clearTokens } from "./auth";
 
 export async function refreshAccessToken(): Promise<string | null> {
   const refresh = getRefreshToken();
   if (!refresh) return null;
 
   try {
-    const res = await client.post(`${API_BASE}/auth/refresh`, {
+    const res = await client.post("/auth/refresh", {
       refresh_token: refresh,
     });
 

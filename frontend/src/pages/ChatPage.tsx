@@ -244,12 +244,10 @@ export default function ChatPage() {
     function uploadDoc() {
         navigate("/docs", {replace: true});
     }
-;
+    ;
 
     function adminPage() {
-        if (isAdmin){
-            navigate("/admin/users", {replace: true})
-        }
+         navigate("/admin/users", {replace: true})
 
     }
 
@@ -315,9 +313,10 @@ export default function ChatPage() {
                     <button onClick={onLogout} style={{flex: 1}}>
                         Logout
                     </button>
-                    <button onClick={adminPage} style={{flex: 1}}>
+                    {isAdmin && <button onClick={adminPage} style={{flex: 1}}>
                         Admin
                     </button>
+                    }
                 </div>
             </div>
 

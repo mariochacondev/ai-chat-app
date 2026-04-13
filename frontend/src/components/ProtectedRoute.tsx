@@ -35,5 +35,5 @@ export default function ProtectedRoute({ children }: PropsWithChildren) {
     return <Navigate to="/auth" replace state={{ from: location }} />;
   }
 
-  return children;
+  return <>{children}</>;
 }
